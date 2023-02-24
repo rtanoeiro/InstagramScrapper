@@ -2,8 +2,9 @@
 This module will be used to save login cookies on your computer in case
 the usual instaloader.login function is requiring user input on the browser.
 
-Run this file, a cookie file will be saved locally, so you can use that file
-to run the scrapper
+1. Login on Mozilla Firefox into Instagram.
+2. After that you can run instagram_scrapper.py
+    and it should get cookie and username from this module.
 """
 
 from argparse import ArgumentParser
