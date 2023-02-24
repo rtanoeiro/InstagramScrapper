@@ -49,15 +49,17 @@ def import_session(cookiefile, sessionfile):
     instaloader.context.username = username
     instaloader.save_session_to_file(sessionfile)
 
+    return cookiefile, username
+
 
 def get_cookie_location():
-    p = ArgumentParser()
-    p.add_argument("-c", "--cookiefile")
-    p.add_argument("-f", "--sessionfile")
-    args = p.parse_args()
+    parser = ArgumentParser()
+    parser.add_argument("-c", "--cookiefile")
+    parser.add_argument("-f", "--sessionfile")
+    args = parser.parse_args()
     try:
-        import_session(args.cookiefile or get_cookiefile(), args.sessionfile)
-    except (ConnectionException, OperationalError) as e:
-        raise SystemExit(f"Cookie import failed: {e}")
-    
-    return args.sessionfile or get_cookiefile()
+        cookiefile, username = import_session(args.cookiefile or get_cookiefile(), args.sessionfile)
+    except (ConnectionException, OperationalError) as exception:
+        raise SystemExit(f"Cookie import failed: {exception}")
+
+    return cookiefile, username
