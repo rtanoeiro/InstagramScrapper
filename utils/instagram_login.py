@@ -37,23 +37,10 @@ class InstagramLogin:
             "Windows": "~/AppData/Roaming/Mozilla/Firefox/Profiles/*/cookies.sqlite",
             "Darwin": "~/Library/Application Support/Firefox/Profiles/*/cookies.sqlite",
         }.get(system(), "~/.mozilla/firefox/*/cookies.sqlite")
-        self.cookiefiles = glob(expanduser(self.default_cookiefile))
-
-    def get_cookiefile(self):
-        """
-        This function will be used to get the cookie file
-        from the Instagram Login Session from Mozilla Firefox
-
-        Raises:
-            SystemExit: If there is no Firefox login session, it returns an error
-
-        Returns:
-            cookie: Returns the cookie file
-        """
-        if not self.cookiefiles:
+        self.cookiefile = glob(expanduser(self.default_cookiefile))[0]
+        if not self.cookiefile:
             raise SystemExit("No Firefox cookies.sqlite file found. Use -c COOKIEFILE.")
-        return self.cookiefiles[0]
-
+  
     def import_session(self, cookiefile: str, sessionfile:str):
         """
         This function will be used to grab the username and cookie
@@ -114,7 +101,7 @@ class InstagramLogin:
         args = parser.parse_args()
         try:
             cookiefile, username = self.import_session(
-                args.cookiefile or self.get_cookiefile(), args.sessionfile
+                args.cookiefile or self.cookiefile, args.sessionfile
             )
         except (ConnectionException, OperationalError) as excecption:
             raise SystemExit("Cookie import failed") from excecption
