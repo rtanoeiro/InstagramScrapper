@@ -1,4 +1,4 @@
-"""Does Stuff"""
+"""Module containing functions to scrape instagram data"""
 import logging
 
 from instaloader import Instaloader, TopSearchResults
@@ -11,6 +11,10 @@ insta = Instaloader()
 insta_login = InstagramLogin()
 
 class ScrappingFunctions:
+    """
+    This Class will contain several functions used for scrapping data on Instagram
+    based on the purpose for theses scripts, which is scrapping data from the website
+    """
 
     def __init__(self) -> None:
         self.cookie_location, self.username = insta_login.get_cookie_file_and_username()
@@ -19,7 +23,7 @@ class ScrappingFunctions:
             filename=self.cookie_location,
         )
 
-    def load_usernames_from_file(filename: str) -> list:
+    def load_usernames_from_file(self, filename: str) -> list:
         """This will return an iterable list of usernames that came from a file
 
         Args:
@@ -37,7 +41,7 @@ class ScrappingFunctions:
         return user_list
 
 
-    def get_usernames_by_search(search_words: list, iterations: int) -> list:
+    def get_usernames_by_search(self, search_words: list, iterations: int) -> list:
         """This function will return a list of usernames that appear from the search
 
         Args:
