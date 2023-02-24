@@ -6,7 +6,7 @@ the usual instaloader.login function is requiring user input on the browser.
 2. After that you can run instagram_scrapper.py
     and it should get cookie and username from this module.
 """
-
+# TODO: CONVERT INTO A CLASS
 from argparse import ArgumentParser
 from glob import glob
 from os.path import expanduser
