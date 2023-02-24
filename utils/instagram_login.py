@@ -40,11 +40,37 @@ class InstagramLogin:
         self.cookiefiles = glob(expanduser(self.default_cookiefile))
 
     def get_cookiefile(self):
+        """
+        This function will be used to get the cookie file
+        from the Instagram Login Session from Mozilla Firefox
+
+        Raises:
+            SystemExit: If there is no Firefox login session, it returns an error
+
+        Returns:
+            cookie: Returns the cookie file
+        """
         if not self.cookiefiles:
             raise SystemExit("No Firefox cookies.sqlite file found. Use -c COOKIEFILE.")
         return self.cookiefiles[0]
 
-    def import_session(self, cookiefile, sessionfile):
+    def import_session(self, cookiefile: str, sessionfile:str):
+        """
+        This function will be used to grab the username and cookie
+        from the Mozilla Firefox Session
+
+        Args:
+            cookiefile (str): cookie file from get_cookiefile function
+            sessionfile (str): filename where cookie is stored
+
+        Raises:
+            SystemExit: In case user is not logged in on Mozilla Firedox,
+            this will thrown an error 
+
+        Returns:
+            cookiefile, username: Returns the cookie file location and username
+            that is logged in to be used on the get_cookie_file_and_username function
+        """
         logging.info("Using cookies from %c", cookiefile)
         conn = connect(f"file:{cookiefile}?immutable=1", uri=True)
         try:
@@ -68,7 +94,20 @@ class InstagramLogin:
 
         return cookiefile, username
 
-    def get_cookie_location(self):
+    def get_cookie_file_and_username(self):
+        """
+        This function will get the cookie file location
+        and username. These will be used load a Instagram Session.
+        The session will then be used to create the instaloader context,
+        user in many of the library class/functions
+
+        Raises:
+            SystemExit: In case the cookie import fails, an error is raised
+
+        Returns:
+            cookiefile, username: Returns the cookie file location and username
+            that is logged in to be used on the get_cookie_file_and_username function
+        """
         parser = ArgumentParser()
         parser.add_argument("-c", "--cookiefile")
         parser.add_argument("-f", "--sessionfile")
