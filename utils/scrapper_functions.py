@@ -3,7 +3,7 @@
 import logging
 
 from instaloader import Instaloader, TopSearchResults
-from utils.login_instagram import get_cookie_location
+from utils.instagram_login import get_cookie_location
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s')
 
