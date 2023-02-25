@@ -58,7 +58,7 @@ class InstagramLogin:
             cookiefile, username: Returns the cookie file location and username
             that is logged in to be used on the get_cookie_file_and_username function
         """
-        logging.info("Using cookies from %c", cookiefile)
+        logging.info("Using cookies from %s", cookiefile)
         conn = connect(f"file:{cookiefile}?immutable=1", uri=True)
         try:
             cookie_data = conn.execute(
@@ -75,7 +75,7 @@ class InstagramLogin:
             raise SystemExit(
                 "Not logged in. Are you logged in successfully in Firefox?"
             )
-        logging.info("Imported session cookie for %u.", username)
+        logging.info("Imported session cookie for %s.", username)
         instaloader.context.username = username
         instaloader.save_session_to_file(sessionfile)
 
