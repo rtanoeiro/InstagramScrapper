@@ -1,13 +1,20 @@
 """Module containing functions to scrape instagram data"""
 import logging
+import pandas as pd
 
 from instaloader import Instaloader, TopSearchResults, Profile, Hashtag
-from utils.instagram_login import InstagramLogin
+from utils.instagram_login import get_username_and_session_file
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s')
+logging.basicConfig(
+    level=logging.DEBUG, format="%(asctime)s %(levelname)s: %(message)s"
+)
 
 insta = Instaloader()
-insta_login = InstagramLogin()
+username, session_file = get_username_and_session_file()
+insta.load_session_from_file(
+    username=username,
+    filename=session_file,
+)
 
 class ScrappingFunctions:
     """
@@ -18,13 +25,8 @@ class ScrappingFunctions:
     from that username.
     """
 
-    def __init__(self) -> None:
-        self.cookie_location, self.username = insta_login.get_cookie_file_and_username()
-        insta.load_session_from_file(
-            username=self.username,
-            filename=self.cookie_location,
-        )
-
+    def __init__(self):
+        pass
     def _get_usernames_from_file(self, filename: str) -> list:
         """This will return an iterable list of usernames that came from a file
         The file should contain one username per line
@@ -42,7 +44,6 @@ class ScrappingFunctions:
         user_list.append(lines)
 
         return user_list
-
 
     def _get_usernames_from_search(self, search_words: list) -> list:
         """This function will return a list of usernames that appear from the search
@@ -96,7 +97,9 @@ class ScrappingFunctions:
         """
         return Profile.from_username(context=insta.context, username=profile)
 
-    def get_profile_json(self, user_info: str or list, number_of_posts: int) -> list[dict]:
+    def get_profile_json(
+        self, user_info: str or list, number_of_posts: int
+    ) -> pd.DataFrame:
         """Given an user_info, we return a list of dictionaries
         containing information from usernames
 
@@ -126,6 +129,8 @@ class ScrappingFunctions:
             "profile_pic_url": [],
             "post_list": [],
             "posts_dates": [],
+        }
+        similar_accounts_dict = {
             "similar_accounts": [],
         }
         for i, user in enumerate(user_list):
@@ -154,6 +159,6 @@ class ScrappingFunctions:
             for account in similar_accounts:
                 similar_accounts_list.append(account.username)
 
-            profiles_dict["similar_accounts"].append(similar_accounts_list)
+            similar_accounts_dict["similar_accounts"].append(similar_accounts_list)
 
-        return profiles_dict
+        return pd.DataFrame(profiles_dict), pd.DataFrame(similar_accounts_dict)
