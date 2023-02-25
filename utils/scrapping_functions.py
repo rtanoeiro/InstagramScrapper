@@ -86,9 +86,19 @@ class ScrappingFunctions:
                 user_list.append(result)
 
         return user_list
-    
+
+    def _get_profile_data(self, profile: str):
+        """
+        This is a helper function to get profile data
+
+        Args:
+            profile (str): username string to scrape
+        """
+        return Profile.from_username(context=insta.context, username=profile)
+
     def get_profile_json(self, user_info: str or list) -> list[dict]:
-        """Given an user_list, we return a list of dictionaries containing information from usernames
+        """Given an user_info, we return a list of dictionaries
+        containing information from usernames
 
         Args:
             user_info (str or list): If an str is given, we get the user list from a file
@@ -97,12 +107,13 @@ class ScrappingFunctions:
         Returns:
             list[dict]: Data retrieved from instaloader
         """
+        ## TODO: Add options to get profile data, from hashtag, search and filename
         user_list, post_list, post_dates = [], [], []
         if user_info is str:
             user_list = self._get_usernames_from_file(filename=user_info)
         elif user_info is list:
-            user_list = self._get_usernames_from_search()
-            
+            user_list = self._get_usernames_from_search(search_words=user_info)
+
         profiles_dict = {
             "followers": [],
             "username": [],
@@ -118,7 +129,7 @@ class ScrappingFunctions:
             print(
                 f"Getting data for {user}. It's the user number {i+1} out of {len(user_list)}\n"
             )
-            profile = Profile.from_username(context=insta.context, username=user)
+            profile =self._get_profile_data(user)
             profiles_dict["username"].append(profile.username)
             profiles_dict["followers"].append(profile.followers)
             profiles_dict["external_url"].append(profile.external_url)
