@@ -96,13 +96,15 @@ class ScrappingFunctions:
         """
         return Profile.from_username(context=insta.context, username=profile)
 
-    def get_profile_json(self, user_info: str or list) -> list[dict]:
+    def get_profile_json(self, user_info: str or list, number_of_posts: int) -> list[dict]:
         """Given an user_info, we return a list of dictionaries
         containing information from usernames
 
         Args:
             user_info (str or list): If an str is given, we get the user list from a file
-            if a list is given, we get from a search
+                if a list is given, we get from a search
+            number_of_posts (int): number of posts to retrieve data,
+                otherwise most of the posts will be returned, slowing down performance
 
         Returns:
             list[dict]: Data retrieved from instaloader
@@ -115,9 +117,10 @@ class ScrappingFunctions:
             user_list = self._get_usernames_from_search(search_words=user_info)
 
         profiles_dict = {
-            "followers": [],
+            "user_id": [],
             "username": [],
-            "external_url": [],
+            "followers": [],
+            "followees": [],
             "is_business_account": [],
             "biography": [],
             "profile_pic_url": [],
@@ -129,10 +132,11 @@ class ScrappingFunctions:
             print(
                 f"Getting data for {user}. It's the user number {i+1} out of {len(user_list)}\n"
             )
-            profile =self._get_profile_data(user)
+            profile = self._get_profile_data(user)
+            profiles_dict["user_id"].append(profile.userid)
             profiles_dict["username"].append(profile.username)
             profiles_dict["followers"].append(profile.followers)
-            profiles_dict["external_url"].append(profile.external_url)
+            profiles_dict["followees"].append(profile.followees)
             profiles_dict["is_business_account"].append(profile.is_business_account)
             profiles_dict["biography"].append(profile.biography)
             profiles_dict["profile_pic_url"].append(profile.profile_pic_url)
