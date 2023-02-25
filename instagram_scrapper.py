@@ -3,13 +3,11 @@
 import ast
 
 import pandas as pd
-from utils.scrapping_functions import ScrappingFunctions
+from utils.scrapping_functions import get_profile_json
 
-scrapping = ScrappingFunctions()
 
-users_data, similar_accounts = scrapping.get_profile_json(["candy"], number_of_posts=50)
+users_data = get_profile_json(user_info=["candy"], number_of_posts=50)
 users_data.to_csv("InstagramData.csv", index=False, mode="a")
-similar_accounts.to_csv("SimilarAccounts.csv", index=False)
 
 
 to_convert = pd.read_csv(
