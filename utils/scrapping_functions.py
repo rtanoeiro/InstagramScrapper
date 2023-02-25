@@ -35,6 +35,7 @@ def _get_usernames_from_file(filename: str) -> list:
 
     return user_list
 
+
 def _get_usernames_from_search(search_words: list) -> list:
     """This function will return a list of usernames that appear from the search
 
@@ -57,6 +58,7 @@ def _get_usernames_from_search(search_words: list) -> list:
 
     return user_list
 
+
 def _get_usernames_from_hashtags(hashtags: list) -> list:
     """This function will return a list of usernames that appear from the search
 
@@ -75,6 +77,7 @@ def _get_usernames_from_hashtags(hashtags: list) -> list:
 
     return search_results
 
+
 def _get_profile_data(profile: str):
     """
     This is a helper function to get profile data
@@ -84,9 +87,8 @@ def _get_profile_data(profile: str):
     """
     return Profile.from_username(context=insta.context, username=profile)
 
-def get_profile_json(
-    user_info: str or list, number_of_posts: int
-) -> pd.DataFrame:
+
+def get_profile_json(user_info: str or list, number_of_posts: int) -> None:
     """Given an user_info, we return a list of dictionaries
     containing information from usernames
 
@@ -116,12 +118,14 @@ def get_profile_json(
         "profile_pic_url": [],
         "post_list": [],
         "posts_dates": [],
-        "similar_accounts": [],
     }
-
+    similar_accounts_dict = {"similar_accounts": []}
     for i, user in enumerate(user_list):
         logging.info(
-            "Getting data for %s. It's the user number %i out of %i\n", user, i+1, len(user_list)
+            "Getting data for %s. It's the user number %i out of %i\n",
+            user,
+            i + 1,
+            len(user_list),
         )
         profile = _get_profile_data(user)
         profiles_dict["user_id"].append(profile.userid)
@@ -133,21 +137,23 @@ def get_profile_json(
         profiles_dict["profile_pic_url"].append(profile.profile_pic_url)
         posts = profile.get_posts()
 
-        for n, post in enumerate(posts):
-            if n == number_of_posts:
+        for n_posts, post in enumerate(posts):
+            if n_posts == number_of_posts:
                 break
             post_dates.append(post.date)
             post_list.append(post.caption)
-
 
         profiles_dict["post_list"].append(post_list)
         profiles_dict["posts_dates"].append(post_dates)
 
         similar_accounts = profile.get_similar_accounts()
-        similar_accounts_list = []
         for account in similar_accounts:
-            similar_accounts_list.append(account.username)
+            similar_accounts_dict["similar_accounts"].append(account.username)
 
-        profiles_dict["similar_accounts"].append(similar_accounts_list)
+    pd.DataFrame(profiles_dict).to_csv("InstagramData.csv", index=False, mode="a")
 
-    return pd.DataFrame(profiles_dict)
+    pd.DataFrame(similar_accounts_dict).to_csv(
+        "SimilarAccounts.csv", index=False, mode="a"
+    )
+
+    return None
