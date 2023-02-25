@@ -102,7 +102,7 @@ def get_profile_json(user_info: str or list, number_of_posts: int) -> None:
         list[dict]: Data retrieved from instaloader
     """
     ## TODO: Add options to get profile data, from hashtag, search and filename
-    user_list, post_list, post_dates = [], [], []
+    user_list = []
     if isinstance(user_info, str):
         user_list = _get_usernames_from_file(filename=user_info)
     elif isinstance(user_info, list):
@@ -121,6 +121,7 @@ def get_profile_json(user_info: str or list, number_of_posts: int) -> None:
     }
     similar_accounts_dict = {"similar_accounts": []}
     for i, user in enumerate(user_list):
+        post_list, post_dates = [], []
         logging.info(
             "Getting data for %s. It's the user number %i out of %i\n",
             user,
