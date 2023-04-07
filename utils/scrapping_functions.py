@@ -52,7 +52,7 @@ def _get_usernames_from_search(search_words: list) -> list:
     """
     user_list = []
     for search_word in search_words:
-        logging.info("Now getting users for the keywork search: #%s \n", search_word)
+        logging.info("Now getting users for the keywork search: %s \n", search_word)
         search_results = TopSearchResults(
             context=insta.context, searchstring=search_word
         ).get_prefixed_usernames()
@@ -120,7 +120,6 @@ def get_profile_json(
     Returns:
         list[dict]: Data retrieved from instaloader
     """
-
     if not isinstance(number_of_posts, int):
         raise TypeError("The number of posts variable has to be an integer")
     if not isinstance(number_of_users, int):
@@ -132,9 +131,9 @@ def get_profile_json(
             hashtags=user_info, number_of_desired_users=number_of_users
         )
     elif user_info_source.lower() == "search":
-        user_list = _get_usernames_from_file(filename=user_info)
-    elif user_info_source.lower() == "file":
         user_list = _get_usernames_from_search(search_words=user_info)
+    elif user_info_source.lower() == "file":
+        user_list = _get_usernames_from_file(filename=user_info)
     else:
         raise ValueError(
             "The value of the variable user_info_source has to be either \
